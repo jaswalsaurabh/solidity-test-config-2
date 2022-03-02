@@ -1,23 +1,32 @@
-import logo from './logo.svg';
+import React, { useEffect, useState } from 'react';
 import './App.css';
+import {useMoralis,useNativeBalance} from 'react-moralis'
 
 function App() {
+  const {authenticate,isAuthenticated,user} = useMoralis();
+  const {data, getBalances} = useNativeBalance();
+  const [balance, setBalance] = useState();
+
+  useEffect(() => {
+    authenticate();
+  }, [])
+  
+
+  // to fetch balance in yout conected account 
+  const getBalance = async()=>{
+    let a = await getBalances();
+    console.log(a);
+  }
+  console.log(isAuthenticated);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+{!isAuthenticated ? <button onClick={()=>authenticate()} >Connect wallet</button> : "Account= 0xiwdjjwd...."}
+    <button onClick={getBalance} >Get My Account Balance</button>
+    <p>You have {balance} Matic in your acount </p>
+    <div>
+    <input type={"text"} placeholder="recipient-account" />
+    <button>Send</button>
+    </div>
     </div>
   );
 }
